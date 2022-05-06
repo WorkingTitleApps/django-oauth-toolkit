@@ -1,6 +1,7 @@
 from django.db import migrations
 from django.contrib.auth.hashers import identify_hasher, make_password
 import logging
+from oauth2_provider.models import get_application_model
 import oauth2_provider.generators
 import oauth2_provider.models
 
@@ -9,7 +10,7 @@ def forwards_func(apps, schema_editor):
     """
     Forward migration touches every application.client_secret which will cause it to be hashed if not already the case.
     """
-    Application = apps.get_model('oauth2_provider', 'application')
+    Application = get_application_model() #apps.get_model('oauth2_provider', 'application')
     applications = Application.objects.all()
     for application in applications:
         application.save(update_fields=['client_secret'])
